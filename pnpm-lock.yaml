@@ -1,11 +1,13 @@
 lockfileVersion: 5.4
 
 specifiers:
+  '@types/bcryptjs': ^2.4.2
   '@types/cookie-parser': ^1.4.3
   '@types/cors': ^2.8.12
   '@types/express': ^4.17.14
   '@types/jsonwebtoken': ^8.5.9
   '@types/node': ^18.8.3
+  bcryptjs: ^2.4.3
   cookie-parser: ^1.4.6
   cors: ^2.8.5
   dotenv: ^16.0.3
@@ -16,6 +18,7 @@ specifiers:
   zod: ^3.19.1
 
 dependencies:
+  bcryptjs: 2.4.3
   cookie-parser: 1.4.6
   cors: 2.8.5
   dotenv: 16.0.3
@@ -25,6 +28,7 @@ dependencies:
   zod: 3.19.1
 
 devDependencies:
+  '@types/bcryptjs': 2.4.2
   '@types/cookie-parser': 1.4.3
   '@types/cors': 2.8.12
   '@types/express': 4.17.14
@@ -33,6 +37,10 @@ devDependencies:
   typescript: 4.8.4
 
 packages:
+
+  /@types/bcryptjs/2.4.2:
+    resolution: {integrity: sha512-LiMQ6EOPob/4yUL66SZzu6Yh77cbzJFYll+ZfaPiPPFswtIlA/Fs1MzdKYA7JApHU49zQTbJGX3PDmCpIdDBRQ==}
+    dev: true
 
   /@types/body-parser/1.19.2:
     resolution: {integrity: sha512-ALYone6pm6QmwZoAgeyNksccT9Q4AWZQ6PvfwR37GT6r6FWUPguq6sUmNGSMV2Wr761oQoBxwGGa6DR5o1DC9g==}
@@ -113,6 +121,10 @@ packages:
 
   /array-flatten/1.1.1:
     resolution: {integrity: sha512-PCVAQswWemu6UdxsDFFX/+gVeYqKAod3D3UVm91jHwynguOwAvYPhx8nNlM++NqRcK6CxxpUafjmhIdKiHibqg==}
+    dev: false
+
+  /bcryptjs/2.4.3:
+    resolution: {integrity: sha512-V/Hy/X9Vt7f3BbPJEi8BdVFMByHi+jNXrYkW3huaybV/kQ0KJg0Y6PkEMbn+zeT+i+SiKZ/HMqJGIIt4LZDqNQ==}
     dev: false
 
   /body-parser/1.20.1:

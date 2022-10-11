@@ -4,8 +4,9 @@
   "description": "",
   "main": "./dist/index.js",
   "scripts": {
-    "key:gen": "ssh-keygen -t rsa -b 4096 -m PEM -f jwt.key && openssl rsa -in jwt.key -pubout -outform PEM -out jwt.key.pub",
-    "key": "pnpm run key:gen && cp ./jwt.key ./dist/ && cp ./jwt.key.pub ./dist/",
+    "setup:key:gen": "ssh-keygen -t rsa -b 4096 -m PEM -f jwt.key && openssl rsa -in jwt.key -pubout -outform PEM -out jwt.key.pub",
+    "setup:key": "pnpm run setup:key:gen && cp ./jwt.key ./dist/ && cp ./jwt.key.pub ./dist/",
+    "setup:database": "",
     "build": "pnpm tsc -p tsconfig.json",
     "dev": "ts-node-dev src/index.ts"
   },

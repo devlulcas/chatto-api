@@ -1,6 +1,7 @@
 import { z } from "zod";
+import { RequestValidation } from "../types/request-validation";
 
-export const signUpSchema = z.object({
+export const signUpSchema: RequestValidation = z.object({
   body: z.object({
     name: z.string({
       required_error: "O campo nome é obrigatório",
@@ -16,7 +17,7 @@ export const signUpSchema = z.object({
   }),
 });
 
-export const signInSchema = z.object({
+export const signInSchema: RequestValidation = z.object({
   body: z.object({
     email: z
       .string({
@@ -29,7 +30,7 @@ export const signInSchema = z.object({
   }),
 });
 
-export const urlSchema = z.object({
+export const urlSchema: RequestValidation = z.object({
   body: z.object({
     url: z.string({
       required_error: "O campo URL é obrigatório",
@@ -43,7 +44,7 @@ export const urlSchema = z.object({
   }),
 });
 
-export const videoUrlSchema = z.object({
+export const videoUrlSchema: RequestValidation = z.object({
   body: z.object({
     url: z.string({
       required_error: "O campo URL é obrigatório",
@@ -57,7 +58,7 @@ export const videoUrlSchema = z.object({
   }),
 });
 
-export const textContentSchema = z.object({
+export const textContentSchema: RequestValidation = z.object({
   body: z.object({
     content: z.string({
       required_error: "Conteúdo é obrigatório",

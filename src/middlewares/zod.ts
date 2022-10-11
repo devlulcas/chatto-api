@@ -1,11 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { ZodAny, ZodObject } from "zod";
-
-type RequestValidation = ZodObject<{
-  body?: ZodAny;
-  query?: ZodAny;
-  params?: ZodAny;
-}>;
+import { RequestValidation } from "../types/request-validation";
 
 export function zValidate(schema: RequestValidation) {
   return async (req: Request, res: Response, next: NextFunction) => {

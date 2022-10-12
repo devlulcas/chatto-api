@@ -6,7 +6,7 @@ import express from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import { errorHandler } from "./middlewares/error-handler";
-import { router } from "./routes";
+import { authRouter, railRouter, topicRouter } from "./routes";
 
 const PORT = process.env.PORT ?? 3333;
 
@@ -32,7 +32,9 @@ app.use(express.json());
 app.use(cookieParser());
 
 // API v1
-app.use("/api/v1", router);
+app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/rail", railRouter);
+app.use("/api/v1/topic/:rail", topicRouter);
 
 // Error handling
 app.use(errorHandler);

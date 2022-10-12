@@ -1,5 +1,17 @@
 {
     "cSpell.words": [
         "middlewares"
+    ],
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 5432,
+            "askForPassword": true,
+            "driver": "PostgreSQL",
+            "username": "app",
+            "database": "db",
+            "name": "tcc-api-db"
+        }
     ]
 }

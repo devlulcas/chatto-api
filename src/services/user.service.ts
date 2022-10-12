@@ -3,8 +3,9 @@ import { AuthResultDto, SignInDto, SignUpDto } from "../dtos/auth.dto";
 import { HttpError } from "../exceptions/http-error";
 import { Payload } from "../types/payload";
 import { JWTService } from "./jwt.service";
+import bcrypt from "bcryptjs";
 
-export class AuthService {
+export class UserService {
   constructor(private jwtService = new JWTService()) {}
 
   async signIn(data: SignInDto): Promise<AuthResultDto> {
@@ -64,11 +65,17 @@ export class AuthService {
     };
   }
 
+  async getRole(id: number) {
+    const user = await prisma.user.findFirst({ where: { id } });
+
+    return user?.role;
+  }
+
   private async hashPassword(password: string) {
-    return "";
+    return bcrypt.hash(password, 8);
   }
 
   private async checkPassword(password: string, hash: string) {
-    return false;
+    return bcrypt.compare(password, hash);
   }
 }

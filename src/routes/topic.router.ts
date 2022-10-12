@@ -1,5 +1,5 @@
 import { Router } from "express";
-import basicController from "../controllers/basic-controller";
+import topicController from "../controllers/topic.controller";
 import { authMiddleware } from "../middlewares/jwt";
 import { zValidate } from "../middlewares/zod";
 import { textContentSchema, urlSchema, videoUrlSchema } from "./validators";
@@ -11,7 +11,7 @@ const topicRouter = Router();
  *
  * > Devolve apenas as informações básicas dos tópicos.
  */
-topicRouter.get("/", basicController.getSample);
+topicRouter.get("/", topicController.findAll);
 
 /**
  * # Obtém detalhes de um tópico para uma determinada trilha
@@ -19,9 +19,9 @@ topicRouter.get("/", basicController.getSample);
  * > Entrega os dados de um tópico juntamente com seus recursos.
  * > Caso seja um recurso de texto então uma URL para consumir o recurso por completo é disponibilizada.
  */
-topicRouter.get("/link/:id", basicController.getSample);
-topicRouter.get("/video/:id", basicController.getSample);
-topicRouter.get("/text/:id", basicController.getSample);
+topicRouter.get("/link/:id", topicController.getLink);
+topicRouter.get("/video/:id", topicController.getVideo);
+topicRouter.get("/text/:id", topicController.getText);
 
 /**
  * # Cria um tópico para uma trilha existente
@@ -30,21 +30,21 @@ topicRouter.post(
   "/link",
   authMiddleware,
   zValidate(urlSchema),
-  basicController.getSample
+  topicController.createLink
 );
 
 topicRouter.post(
   "/video",
   authMiddleware,
   zValidate(videoUrlSchema),
-  basicController.getSample
+  topicController.createVideo
 );
 
 topicRouter.post(
   "/text",
   authMiddleware,
   zValidate(textContentSchema),
-  basicController.getSample
+  topicController.createText
 );
 
 /**
@@ -54,23 +54,23 @@ topicRouter.put(
   "/link/:id",
   authMiddleware,
   zValidate(urlSchema),
-  basicController.getSample
+  topicController.updateLink
 );
 
 topicRouter.put(
   "/video/:id",
   authMiddleware,
   zValidate(videoUrlSchema),
-  basicController.getSample
+  topicController.updateVideo
 );
 
 topicRouter.put(
   "/text/:id",
   authMiddleware,
   zValidate(textContentSchema),
-  basicController.getSample
+  topicController.updateText
 );
 
-topicRouter.delete("/:id", authMiddleware, basicController.getSample);
+topicRouter.delete("/:id", authMiddleware, topicController.remove);
 
 export { topicRouter };

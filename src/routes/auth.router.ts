@@ -1,17 +1,17 @@
 import { Router } from "express";
-import basicController from "../controllers/basic-controller";
+import authController from "../controllers/auth.controller";
 import { zValidate } from "../middlewares/zod";
 import { signInSchema, signUpSchema } from "./validators";
 
 const authRouter = Router();
 
 // Sign In
-authRouter.post("/sign-in", zValidate(signInSchema), basicController.getSample);
+authRouter.post("/sign-in", zValidate(signInSchema), authController.signIn);
 
 // Sign Out
-authRouter.post("/sign-up", zValidate(signUpSchema), basicController.getSample);
+authRouter.post("/sign-up", zValidate(signUpSchema), authController.signUp);
 
 // Sign Up
-authRouter.post("/sign-out", basicController.getSample);
+authRouter.post("/sign-out", authController.signOut);
 
 export { authRouter };

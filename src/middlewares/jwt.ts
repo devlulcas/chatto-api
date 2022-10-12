@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { HttpError } from "../exceptions/http-error";
-import { Auth } from "../services/auth";
+import { JWTService } from "../services/jwt.service";
 
 export async function authMiddleware(
   req: Request,
@@ -16,7 +16,7 @@ export async function authMiddleware(
 
     if (!token) throw new HttpError(401, "Token ausente");
 
-    const auth = new Auth();
+    const auth = new JWTService();
 
     const decoded = await auth.validadeToken(token);
 

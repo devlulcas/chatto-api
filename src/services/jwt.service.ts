@@ -11,10 +11,10 @@ export class JWTService {
   private expiresIn: string;
 
   constructor() {
-    this.privateKeyPath = join(__dirname, "../../../jwt.key");
+    this.privateKeyPath = join(__dirname, "../../jwt.key");
     this.privateKey = readFileSync(this.privateKeyPath);
     this.expiresIn = process.env.JWT_EXPIRATION || "1h";
-    this.publicKeyPath = join(__dirname, "../../../jwt.key.pub");
+    this.publicKeyPath = join(__dirname, "../../jwt.key.pub");
     this.publicKey = readFileSync(this.publicKeyPath);
   }
 

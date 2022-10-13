@@ -8,10 +8,10 @@ export function errorHandler(
   next: NextFunction
 ) {
   const code = error.code || 500;
-  const message = error.message ?? "Ocorreu um erro";
+  const content = error.message ?? "Ocorreu um erro";
 
   res.status(code).send({
     status: code,
-    message,
+    error: content,
   });
 }

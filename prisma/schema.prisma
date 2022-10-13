@@ -18,7 +18,7 @@ model User {
   email    String    @unique
   password String
   role     Role      @default(USER)
-  Rail     Rail[]
+  rail     Rail[]
   Topic    Topic[]
   Content  Content[]
 }
@@ -30,7 +30,7 @@ model Rail {
   thumbnail   String
   author      User    @relation(fields: [userId], references: [id])
   userId      Int
-  Topic       Topic[]
+  topic       Topic[]
 }
 
 model Topic {

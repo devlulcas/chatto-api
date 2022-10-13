@@ -9,7 +9,9 @@ const authRouter = Router();
 authRouter.post("/sign-in", zValidate(signInSchema), authController.signIn);
 
 // Sign Out
-authRouter.post("/sign-up", zValidate(signUpSchema), authController.signUp);
+authRouter.post("/sign-up", zValidate(signUpSchema), (req, res) => {
+  return authController.signUp(req, res);
+});
 
 // Sign Up
 authRouter.post("/sign-out", authController.signOut);

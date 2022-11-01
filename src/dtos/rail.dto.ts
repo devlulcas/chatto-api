@@ -1,6 +1,3 @@
-export interface RailDto {
-  title: string;
-  description: string;
-  thumbnail: string;
-  authorId: number;
-}
+import { Rail } from "@prisma/client";
+
+export interface RailDto extends Omit<Rail, "id"> {}

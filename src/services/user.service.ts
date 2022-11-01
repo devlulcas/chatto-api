@@ -4,21 +4,28 @@ import { HttpError } from "../exceptions/http-error";
 import { Payload } from "../types/payload";
 import { JWTService } from "./jwt.service";
 import bcrypt from "bcryptjs";
+import { Role } from "@prisma/client";
 
-export class UserService {
+interface IUserService {
+  signIn(data: SignInDto): Promise<AuthResultDto>;
+  signUp(data: SignUpDto): Promise<AuthResultDto>;
+  getRole(id: number): Promise<Role>;
+}
+
+export class UserService implements IUserService {
   constructor(private jwtService = new JWTService()) {}
 
-  async signIn(data: SignInDto): Promise<AuthResultDto> {
+  async signIn(data: SignInDto) {
     const user = await prisma.user.findFirst({ where: { email: data.email } });
 
-    if (!user) throw new HttpError(404, "Usuário inexistente");
+    if (!user) throw HttpError.notFound("Usuário inexistente");
 
     const isPasswordCorrect = await this.checkPassword(
       data.password,
       user.password
     );
 
-    if (!isPasswordCorrect) throw new HttpError(404, "Usuário inexistente");
+    if (!isPasswordCorrect) throw HttpError.notFound("Usuário inexistente");
 
     const payload: Payload = {
       id: user.id,
@@ -35,10 +42,10 @@ export class UserService {
     };
   }
 
-  async signUp(data: SignUpDto): Promise<AuthResultDto> {
+  async signUp(data: SignUpDto) {
     const user = await prisma.user.findFirst({ where: { email: data.email } });
 
-    if (user) throw new HttpError(404, "Erro ao realizar cadastro");
+    if (user) throw HttpError.notFound("Erro ao realizar cadastro");
 
     const hashedPassword = await this.hashPassword(data.password);
 
@@ -67,6 +74,8 @@ export class UserService {
 
   async getRole(id: number) {
     const user = await prisma.user.findFirst({ where: { id } });
+
+    if (!user?.role) throw HttpError.notFound();
 
     return user?.role;
   }

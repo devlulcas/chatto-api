@@ -27,7 +27,9 @@ class AuthController {
 
     res.cookie("payload", payload, this.payloadCookieOptions);
 
-    res.send({});
+    res.send({
+      payload,
+    });
   }
 
   async signUp(req: Request, res: Response) {
@@ -43,7 +45,9 @@ class AuthController {
 
     res.cookie("payload", payload, this.payloadCookieOptions);
 
-    res.status(201).send({});
+    res.status(201).send({
+      payload,
+    });
   }
 
   async signOut(req: Request, res: Response) {

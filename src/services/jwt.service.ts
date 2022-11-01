@@ -3,7 +3,12 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { Payload } from "../types/payload";
 
-export class JWTService {
+interface IJWTService {
+  createToken(payload: Payload): string;
+  validateToken(token: string): Promise<Payload>;
+}
+
+export class JWTService implements IJWTService {
   private privateKeyPath: string;
   private privateKey: Buffer;
   private publicKeyPath: string;
@@ -24,7 +29,7 @@ export class JWTService {
    * @param payload Objeto com informações de payload para usar depois
    * @returns Token assinado
    */
-  createToken(payload: Payload): string {
+  createToken(payload: Payload) {
     const signOptions: SignOptions = {
       algorithm: "RS256",
       expiresIn: this.expiresIn,
@@ -39,12 +44,12 @@ export class JWTService {
    * @param token String do token JWT assinado
    * @returns Uma promise contendo o payload que estava guardado no token
    */
-  validadeToken(token: string): Promise<Payload> {
+  validateToken(token: string) {
     const verifyOptions: VerifyOptions = {
       algorithms: ["RS256"],
     };
 
-    return new Promise((resolve, reject) => {
+    return new Promise<Payload>((resolve, reject) => {
       verify(token, this.publicKey, verifyOptions, (error, decoded) => {
         if (error) return reject(error);
 

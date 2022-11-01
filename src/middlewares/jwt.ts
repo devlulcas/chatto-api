@@ -8,17 +8,13 @@ export async function authMiddleware(
   next: NextFunction
 ) {
   try {
-    const authToken = req.cookies.token ?? req.headers.authorization;
-
-    if (!authToken) throw new HttpError(401, "Token ausente");
-
-    const [, token] = authToken.split(" ");
+    const token = req.cookies.token;
 
     if (!token) throw new HttpError(401, "Token ausente");
 
     const auth = new JWTService();
 
-    const decoded = await auth.validadeToken(token);
+    const decoded = await auth.validateToken(token);
 
     req.payload = decoded;
 

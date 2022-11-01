@@ -3,7 +3,7 @@ import { ZodError } from "zod";
 import { HttpError } from "../exceptions/http-error";
 import { RequestValidation } from "../types/request-validation";
 
-export function zValidate(schema: RequestValidation) {
+export function zod(schema: RequestValidation) {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
       await schema.parseAsync({

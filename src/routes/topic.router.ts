@@ -1,7 +1,7 @@
 import { Router } from "express";
 import topicController from "../controllers/topic.controller";
 import { authMiddleware } from "../middlewares/jwt";
-import { zValidate } from "../middlewares/zod";
+import { zod } from "../middlewares/zod";
 import { textContentSchema, urlSchema, videoUrlSchema } from "./validators";
 
 const topicRouter = Router();
@@ -29,21 +29,21 @@ topicRouter.get("/text/:id", topicController.getText);
 topicRouter.post(
   "/link",
   authMiddleware,
-  zValidate(urlSchema),
+  zod(urlSchema),
   topicController.createLink
 );
 
 topicRouter.post(
   "/video",
   authMiddleware,
-  zValidate(videoUrlSchema),
+  zod(videoUrlSchema),
   topicController.createVideo
 );
 
 topicRouter.post(
   "/text",
   authMiddleware,
-  zValidate(textContentSchema),
+  zod(textContentSchema),
   topicController.createText
 );
 
@@ -53,21 +53,21 @@ topicRouter.post(
 topicRouter.put(
   "/link/:id",
   authMiddleware,
-  zValidate(urlSchema),
+  zod(urlSchema),
   topicController.updateLink
 );
 
 topicRouter.put(
   "/video/:id",
   authMiddleware,
-  zValidate(videoUrlSchema),
+  zod(videoUrlSchema),
   topicController.updateVideo
 );
 
 topicRouter.put(
   "/text/:id",
   authMiddleware,
-  zValidate(textContentSchema),
+  zod(textContentSchema),
   topicController.updateText
 );
 

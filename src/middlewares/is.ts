@@ -16,7 +16,7 @@ export function is(roles: string[]) {
       throw new HttpError(401, "Permissão insuficiente");
     }
 
-    if (!roles.includes(userRole)) {
+    if (!roles.includes(userRole.toLowerCase().trim())) {
       throw new HttpError(401, "Permissão insuficiente");
     }
 

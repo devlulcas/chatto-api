@@ -2,18 +2,18 @@ import { prisma } from "../configs";
 import { AuthResultDto, SignInDto, SignUpDto } from "../dtos/auth.dto";
 import { HttpError } from "../exceptions/http-error";
 import { Payload } from "../types/payload";
-import { JWTService } from "./jwt.service";
+import { JWTRepository } from "./jwt.repository";
 import bcrypt from "bcryptjs";
 import { Role } from "@prisma/client";
 
-interface IUserService {
+interface IUserRepository {
   signIn(data: SignInDto): Promise<AuthResultDto>;
   signUp(data: SignUpDto): Promise<AuthResultDto>;
   getRole(id: number): Promise<Role>;
 }
 
-export class UserService implements IUserService {
-  constructor(private jwtService = new JWTService()) {}
+export class UserRepository implements IUserRepository {
+  constructor(private jwtRepository = new JWTRepository()) {}
 
   async signIn(data: SignInDto) {
     const user = await prisma.user.findFirst({ where: { email: data.email } });
@@ -34,7 +34,7 @@ export class UserService implements IUserService {
       permissions: [],
     };
 
-    const token = this.jwtService.createToken(payload);
+    const token = this.jwtRepository.createToken(payload);
 
     return {
       token,
@@ -64,7 +64,7 @@ export class UserService implements IUserService {
       permissions: [],
     };
 
-    const token = this.jwtService.createToken(payload);
+    const token = this.jwtRepository.createToken(payload);
 
     return {
       token,

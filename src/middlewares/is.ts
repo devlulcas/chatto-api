@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { HttpError } from "../exceptions/http-error";
-import { UserService } from "../services/user.service";
+import { UserRepository } from "../repositories/user.repository";
 
 export function is(roles: string[]) {
   return async (req: Request, res: Response, next: NextFunction) => {
@@ -8,9 +8,9 @@ export function is(roles: string[]) {
 
     if (!user) throw new HttpError(401, "Permissão ausente");
 
-    const userService = new UserService();
+    const userRepository = new UserRepository();
 
-    const userRole = await userService.getRole(user);
+    const userRole = await userRepository.getRole(user);
 
     if (!userRole) {
       throw new HttpError(401, "Permissão insuficiente");

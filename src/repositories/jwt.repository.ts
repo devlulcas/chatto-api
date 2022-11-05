@@ -3,12 +3,12 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { Payload } from "../types/payload";
 
-interface IJWTService {
+interface IJWTRepository {
   createToken(payload: Payload): string;
   validateToken(token: string): Promise<Payload>;
 }
 
-export class JWTService implements IJWTService {
+export class JWTRepository implements IJWTRepository {
   private privateKeyPath: string;
   private privateKey: Buffer;
   private publicKeyPath: string;

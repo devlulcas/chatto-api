@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
 import { RailDto } from "../dtos/rail.dto";
 import { HttpError } from "../exceptions/http-error";
-import { RailService } from "../services/rail.service";
+import { RailRepository } from "../repositories/rail.repository";
 import { Pagination } from "../types/pagination";
 
 class RailController {
-  constructor(private railService: RailService) {}
+  constructor(private railRepository: RailRepository) {}
 
   async create(req: Request, res: Response) {
     const authorId = req.payload.id;
@@ -17,7 +17,7 @@ class RailController {
       userId: authorId,
     };
 
-    const newRail = await this.railService.create(rail);
+    const newRail = await this.railRepository.create(rail);
 
     res.sendStatus(201).send(newRail);
   }
@@ -41,11 +41,17 @@ class RailController {
 
     if (req.query.search) {
       const search = req.query.search.toString();
-      const rails = await this.railService.searchByTitle(search, pagination);
+      const rails = await this.railRepository.searchByTitle(search, pagination);
       res.send(rails);
     }
 
-    const rails = await this.railService.findMany(pagination);
+    const rails = await this.railRepository.findMany(pagination);
+
+    res.send(rails);
+  }
+
+  async findMostPopular(req: Request, res: Response) {
+    const rails = await this.railRepository.findMostPopular();
 
     res.send(rails);
   }
@@ -55,7 +61,7 @@ class RailController {
 
     if (!id) throw HttpError.badRequest();
 
-    const rail = await this.railService.getOne(id);
+    const rail = await this.railRepository.getOne(id);
 
     res.send(rail);
   }
@@ -67,7 +73,7 @@ class RailController {
 
     const userId = req.payload.id;
 
-    const updatedRail = await this.railService.update({
+    const updatedRail = await this.railRepository.update({
       id,
       description: req.body.description,
       title: req.body.title,
@@ -83,10 +89,10 @@ class RailController {
 
     if (!id) throw HttpError.badRequest();
 
-    const removedRail = await this.railService.delete(id);
+    const removedRail = await this.railRepository.delete(id);
 
     res.send(removedRail);
   }
 }
 
-export default new RailController(new RailService());
+export default new RailController(new RailRepository());

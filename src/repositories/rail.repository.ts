@@ -4,7 +4,7 @@ import { RailDto } from "../dtos/rail.dto";
 import { HttpError } from "../exceptions/http-error";
 import { Pagination } from "../types/pagination";
 
-interface IRailService {
+interface IRailRepository {
   findMany(pagination?: { page: number; limit: number }): Promise<Rail[]>;
   findMostPopular(): Promise<Rail[]>;
   searchByTitle(title: string): Promise<Rail[]>;
@@ -14,11 +14,7 @@ interface IRailService {
   delete(railId: Rail["id"]): Promise<Rail>;
 }
 
-export class RailService implements IRailService {
-  async deleteOne(id: number) {
-    return prisma.rail.delete({ where: { id } });
-  }
-
+export class RailRepository implements IRailRepository {
   async findMany(pagination?: Pagination): Promise<Rail[]> {
     if (pagination) {
       return prisma.rail.findMany({
@@ -33,6 +29,7 @@ export class RailService implements IRailService {
 
   async findMostPopular() {
     return prisma.rail.findMany({
+      skip: 0,
       take: 4,
     });
   }

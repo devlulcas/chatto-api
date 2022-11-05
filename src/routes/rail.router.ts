@@ -15,6 +15,15 @@ railRouter.get("/", (req, res) => {
 });
 
 /**
+ * # Lista trilhas mais populares
+ *
+ * > Devolve algumas das trilhas mais populares
+ */
+railRouter.get("/most-popular", (req, res) => {
+  return railController.findMostPopular(req, res);
+});
+
+/**
  * # Obtém detalhes de uma trilha
  *
  * > Entrega os dados da trilha em especifico.

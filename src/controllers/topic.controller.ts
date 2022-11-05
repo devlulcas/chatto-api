@@ -1,21 +1,69 @@
 import { Request, Response } from "express";
+import { TopicDto } from "../dtos/topic.dto";
+import { HttpError } from "../exceptions/http-error";
+import { TopicRepository } from "../repositories/topic.repository";
 
 class TopicController {
-  async findAll(req: Request, res: Response) {}
+  constructor(private topicRepository: TopicRepository) {}
 
-  async createLink(req: Request, res: Response) {}
-  async createVideo(req: Request, res: Response) {}
-  async createText(req: Request, res: Response) {}
+  async findOne(req: Request, res: Response) {
+    const id = parseInt(req.params.id.toString(), 10);
 
-  async getLink(req: Request, res: Response) {}
-  async getVideo(req: Request, res: Response) {}
-  async getText(req: Request, res: Response) {}
+    if (!id) throw HttpError.badRequest();
 
-  async updateLink(req: Request, res: Response) {}
-  async updateVideo(req: Request, res: Response) {}
-  async updateText(req: Request, res: Response) {}
+    const rail = await this.topicRepository.getOne(id);
 
-  async remove(req: Request, res: Response) {}
+    res.send(rail);
+  }
+
+  async create(req: Request, res: Response) {
+    const railId = req.query.rail;
+
+    if (!railId) throw HttpError.badRequest();
+
+    const authorId = req.payload.id;
+
+    const topic: TopicDto = {
+      railId: parseInt(railId?.toString(), 10),
+      description: req.body.description,
+      thumbnail: req.body.thumbnail,
+      title: req.body.title,
+      userId: authorId,
+    };
+
+    const newTopic = await this.topicRepository.create(topic);
+
+    res.sendStatus(201).send(newTopic);
+  }
+
+  async update(req: Request, res: Response) {
+    const id = parseInt(req.params.id.toString(), 10);
+
+    if (!id) throw HttpError.badRequest();
+
+    const userId = req.payload.id;
+
+    const updatedTopic = await this.topicRepository.update({
+      id,
+      railId: req.body.railId,
+      description: req.body.description,
+      title: req.body.title,
+      thumbnail: req.body.thumbnail,
+      userId,
+    });
+
+    res.send(updatedTopic);
+  }
+
+  async remove(req: Request, res: Response) {
+    const id = parseInt(req.params.id.toString(), 10);
+
+    if (!id) throw HttpError.badRequest();
+
+    const removedTopic = await this.topicRepository.delete(id);
+
+    res.send(removedTopic);
+  }
 }
 
-export default new TopicController();
+export default new TopicController(new TopicRepository());

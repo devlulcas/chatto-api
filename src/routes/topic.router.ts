@@ -1,9 +1,13 @@
 import { Router } from "express";
-import topicController from "../controllers/topic.controller";
+import { TopicController } from "../controllers/topic.controller";
 import { is } from "../middlewares/is";
 import { authMiddleware } from "../middlewares/jwt";
-import { zod } from "../middlewares/zod";
-import { textContentSchema, urlSchema, videoUrlSchema } from "./validators";
+import { TopicRepository } from "../repositories/topic.repository";
+import { TopicService } from "../services/topic.service";
+
+const topicRepository = new TopicRepository();
+const topicService = new TopicService(topicRepository);
+const topicController = new TopicController(topicService);
 
 const topicRouter = Router();
 

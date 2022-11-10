@@ -1,11 +1,12 @@
 import { Content, Topic } from "@prisma/client";
 import { prisma } from "../configs";
 import { TopicDto } from "../dtos/topic.dto";
-import { HttpError } from "../exceptions/http-error";
 
-interface ITopicRepository {
-  getOne(id: Topic["id"]): Promise<{ topic: Topic; contents: Content[] }>;
-  create(topic: TopicDto): Promise<Topic>;
+export interface ITopicRepository {
+  getOne(
+    id: Topic["id"]
+  ): Promise<{ topic: Topic; contents: Content[] } | null>;
+  save(topic: TopicDto): Promise<Topic>;
   update(topic: Topic): Promise<Topic>;
   delete(topicId: Topic["id"]): Promise<Topic>;
 }
@@ -17,7 +18,7 @@ export class TopicRepository implements ITopicRepository {
       include: { contents: true },
     });
 
-    if (!result) throw HttpError.notFound();
+    if (!result) return null;
 
     const { contents, ...rest } = result;
 
@@ -27,7 +28,7 @@ export class TopicRepository implements ITopicRepository {
     };
   }
 
-  async create(topic: TopicDto) {
+  async save(topic: TopicDto) {
     return prisma.topic.create({
       data: topic,
     });

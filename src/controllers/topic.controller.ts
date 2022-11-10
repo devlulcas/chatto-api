@@ -1,17 +1,17 @@
 import { Request, Response } from "express";
 import { TopicDto } from "../dtos/topic.dto";
 import { HttpError } from "../exceptions/http-error";
-import { TopicRepository } from "../repositories/topic.repository";
+import { ITopicService } from "../services/topic.service";
 
-class TopicController {
-  constructor(private topicRepository: TopicRepository) {}
+export class TopicController {
+  constructor(private topicService: ITopicService) {}
 
   async findOne(req: Request, res: Response) {
     const id = parseInt(req.params.id.toString(), 10);
 
     if (!id) throw HttpError.badRequest();
 
-    const rail = await this.topicRepository.getOne(id);
+    const rail = await this.topicService.getTopicById(id);
 
     res.send(rail);
   }
@@ -31,7 +31,7 @@ class TopicController {
       userId: authorId,
     };
 
-    const newTopic = await this.topicRepository.create(topic);
+    const newTopic = await this.topicService.createTopic(topic);
 
     res.sendStatus(201).send(newTopic);
   }
@@ -43,8 +43,7 @@ class TopicController {
 
     const userId = req.payload.id;
 
-    const updatedTopic = await this.topicRepository.update({
-      id,
+    const updatedTopic = await this.topicService.updateTopic(id, {
       railId: req.body.railId,
       description: req.body.description,
       title: req.body.title,
@@ -60,10 +59,8 @@ class TopicController {
 
     if (!id) throw HttpError.badRequest();
 
-    const removedTopic = await this.topicRepository.delete(id);
+    const removedTopic = await this.topicService.deleteTopic(id);
 
     res.send(removedTopic);
   }
 }
-
-export default new TopicController(new TopicRepository());

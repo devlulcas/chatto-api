@@ -35,7 +35,7 @@ app.use(cookieParser());
 app.get("/api/v1", (req, res) => res.send({ hello: "world" }));
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/rail", railRouter);
-app.use("/api/v1/topic/:rail", topicRouter);
+app.use("/api/v1/topic", topicRouter);
 
 // Error handling
 app.use(errorHandler);

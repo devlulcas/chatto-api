@@ -1,15 +1,16 @@
 import { Rail, Topic } from "@prisma/client";
 import { prisma } from "../configs";
 import { RailDto } from "../dtos/rail.dto";
-import { HttpError } from "../exceptions/http-error";
+import { UserDto } from "../dtos/user.dto";
 import { Pagination } from "../types/pagination";
 
-interface IRailRepository {
+export interface IRailRepository {
   findMany(pagination?: { page: number; limit: number }): Promise<Rail[]>;
-  findMostPopular(): Promise<Rail[]>;
-  searchByTitle(title: string): Promise<Rail[]>;
-  getOne(id: Rail["id"]): Promise<{ rail: Rail; topics: Topic[] }>;
-  create(rail: RailDto): Promise<Rail>;
+  findByTitle(title: string, pagination?: Pagination): Promise<Rail[]>;
+  findById(
+    id: Rail["id"]
+  ): Promise<{ rail: Rail; topics: Topic[]; author: UserDto } | null>;
+  save(rail: RailDto): Promise<Rail>;
   update(rail: Rail): Promise<Rail>;
   delete(railId: Rail["id"]): Promise<Rail>;
 }
@@ -27,16 +28,7 @@ export class RailRepository implements IRailRepository {
     return prisma.rail.findMany();
   }
 
-  async findMostPopular() {
-    return prisma.rail.findMany({
-      skip: 0,
-      take: 4,
-    });
-  }
-
-  async searchByTitle(title: string, pagination?: Pagination) {
-    if (!title) throw HttpError.badRequest();
-
+  async findByTitle(title: string, pagination?: Pagination) {
     let rails: Rail[] = [];
 
     if (pagination) {
@@ -44,6 +36,7 @@ export class RailRepository implements IRailRepository {
         where: {
           title: {
             contains: title,
+            mode: "insensitive",
           },
         },
         take: pagination.limit,
@@ -61,28 +54,32 @@ export class RailRepository implements IRailRepository {
       },
     });
 
-    if (!rails.length) throw HttpError.notFound("Nenhuma trilha encontrada");
-
     return rails;
   }
 
-  async getOne(id: Rail["id"]) {
+  async findById(id: Rail["id"]) {
     const result = await prisma.rail.findFirst({
       where: { id },
-      include: { topic: true },
+      include: { topic: true, author: true },
     });
 
-    if (!result) throw HttpError.notFound();
+    if (!result) return null;
 
-    const { topic, ...rest } = result;
+    const { topic, author, ...rest } = result;
 
     return {
       rail: rest,
       topics: topic,
+      author: {
+        id: author.id,
+        name: author.name,
+        email: author.email,
+        role: author.role,
+      },
     };
   }
 
-  async create(rail: RailDto) {
+  async save(rail: RailDto) {
     return prisma.rail.create({
       data: rail,
     });

@@ -1,3 +1,3 @@
 import { Rail } from "@prisma/client";
 
-export interface RailDto extends Omit<Rail, "id"> {}
+export type RailDto = Omit<Rail, "id">;

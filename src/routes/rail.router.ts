@@ -1,7 +1,13 @@
 import { Router } from "express";
+import { RailController } from "../controllers/rail.controller";
 import { is } from "../middlewares/is";
 import { authMiddleware } from "../middlewares/jwt";
-import railController from "../controllers/rail.controller";
+import { RailRepository } from "../repositories/rail.repository";
+import { RailService } from "../services/rail.service";
+
+const railRepository = new RailRepository();
+const railService = new RailService(railRepository);
+const railController = new RailController(railService);
 
 const railRouter = Router();
 

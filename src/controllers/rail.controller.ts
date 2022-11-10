@@ -1,23 +1,19 @@
 import { Request, Response } from "express";
-import { RailDto } from "../dtos/rail.dto";
 import { HttpError } from "../exceptions/http-error";
-import { RailRepository } from "../repositories/rail.repository";
+import { IRailService } from "../services/rail.service";
 import { Pagination } from "../types/pagination";
+import { railSchema } from "../validators";
 
-class RailController {
-  constructor(private railRepository: RailRepository) {}
+export class RailController {
+  constructor(private railService: IRailService) {}
 
   async create(req: Request, res: Response) {
-    const authorId = req.payload.id;
+    const rail = railSchema.parse({
+      ...req.body,
+      authorId: req.payload.id,
+    });
 
-    const rail: RailDto = {
-      description: req.body.description,
-      thumbnail: req.body.thumbnail,
-      title: req.body.title,
-      userId: authorId,
-    };
-
-    const newRail = await this.railRepository.create(rail);
+    const newRail = await this.railService.createRail({ ...rail }, rail.userId);
 
     res.sendStatus(201).send(newRail);
   }
@@ -41,17 +37,17 @@ class RailController {
 
     if (req.query.search) {
       const search = req.query.search.toString();
-      const rails = await this.railRepository.searchByTitle(search, pagination);
+      const rails = await this.railService.getRailsByTitle(search, pagination);
       res.send(rails);
     }
 
-    const rails = await this.railRepository.findMany(pagination);
+    const rails = await this.railService.getRails(pagination);
 
     res.send(rails);
   }
 
   async findMostPopular(req: Request, res: Response) {
-    const rails = await this.railRepository.findMostPopular();
+    const rails = await this.railService.getMostPopularRails();
 
     res.send(rails);
   }
@@ -61,7 +57,7 @@ class RailController {
 
     if (!id) throw HttpError.badRequest();
 
-    const rail = await this.railRepository.getOne(id);
+    const rail = await this.railService.getRailDetails(id);
 
     res.send(rail);
   }
@@ -73,7 +69,7 @@ class RailController {
 
     const userId = req.payload.id;
 
-    const updatedRail = await this.railRepository.update({
+    const updatedRail = await this.railService.updateRail({
       id,
       description: req.body.description,
       title: req.body.title,
@@ -89,10 +85,8 @@ class RailController {
 
     if (!id) throw HttpError.badRequest();
 
-    const removedRail = await this.railRepository.delete(id);
+    const removedRail = await this.railService.deleteRail(id);
 
     res.send(removedRail);
   }
 }
-
-export default new RailController(new RailRepository());

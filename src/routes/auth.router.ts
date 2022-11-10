@@ -1,17 +1,25 @@
 import { Router } from "express";
-import authController from "../controllers/auth.controller";
-import { zod } from "../middlewares/zod";
-import { signInSchema, signUpSchema } from "./validators";
+import { AuthController } from "../controllers/auth.controller";
+import { Crypto } from "../lib/crypto.lib";
+import { JWT } from "../lib/token.lib";
+import { UserRepository } from "../repositories/user.repository";
+import { AuthService } from "../services/auth.service";
 
 const authRouter = Router();
 
+const userRepository = new UserRepository();
+const crypto = new Crypto();
+const tokenGenerator = new JWT();
+const authService = new AuthService(userRepository, crypto, tokenGenerator);
+const authController = new AuthController(authService);
+
 // Sign In
-authRouter.post("/sign-in", zod(signInSchema), (req, res) => {
+authRouter.post("/sign-in", (req, res) => {
   return authController.signIn(req, res);
 });
 
 // Sign Out
-authRouter.post("/sign-up", zod(signUpSchema), (req, res) => {
+authRouter.post("/sign-up", (req, res) => {
   return authController.signUp(req, res);
 });
 

@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { HttpError } from "../exceptions/http-error";
-import { JWTRepository } from "../repositories/jwt.repository";
+import { JWT } from "../lib/token.lib";
 
 export async function authMiddleware(
   req: Request,
@@ -12,9 +12,9 @@ export async function authMiddleware(
 
     if (!token) throw new HttpError(401, "Token ausente");
 
-    const auth = new JWTRepository();
+    const jwt = new JWT();
 
-    const decoded = await auth.validateToken(token);
+    const decoded = await jwt.validateToken(token);
 
     req.payload = decoded;
 

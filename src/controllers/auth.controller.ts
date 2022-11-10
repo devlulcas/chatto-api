@@ -1,7 +1,8 @@
 import { CookieOptions, Request, Response } from "express";
-import { UserRepository } from "../repositories/user.repository";
+import { AuthService } from "../services/auth.service";
+import { signInSchema, signUpSchema } from "../validators";
 
-class AuthController {
+export class AuthController {
   private cookieOptions: CookieOptions = {
     domain: "/",
     httpOnly: true,
@@ -13,12 +14,12 @@ class AuthController {
     maxAge: 60 * 1000,
   };
 
-  constructor(private userRepository: UserRepository) {}
+  constructor(private authService: AuthService) {}
 
   async signIn(req: Request, res: Response) {
-    const { email, password } = req.body;
+    const { email, password } = signInSchema.parse({ body: req.body });
 
-    const { token, payload } = await this.userRepository.signIn({
+    const { token, payload } = await this.authService.signIn({
       email,
       password,
     });
@@ -33,9 +34,9 @@ class AuthController {
   }
 
   async signUp(req: Request, res: Response) {
-    const { name, email, password } = req.body;
+    const { name, email, password } = signUpSchema.parse({ body: req.body });
 
-    const { token, payload } = await this.userRepository.signUp({
+    const { token, payload } = await this.authService.signUp({
       name,
       email,
       password,
@@ -59,5 +60,3 @@ class AuthController {
     res.send({});
   }
 }
-
-export default new AuthController(new UserRepository());

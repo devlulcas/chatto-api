@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { TopicDto } from "../dtos/topic.dto";
 import { HttpError } from "../exceptions/http-error";
 import { ITopicService } from "../services/topic.service";
+import { topicSchema } from "../validators";
 
 export class TopicController {
   constructor(private topicService: ITopicService) {}
@@ -17,19 +18,19 @@ export class TopicController {
   }
 
   async create(req: Request, res: Response) {
-    const railId = req.query.rail;
+    const rail = req.query.rail;
 
-    if (!railId) throw HttpError.badRequest();
+    if (!rail) throw HttpError.badRequest();
 
-    const authorId = req.payload.id;
+    if (typeof rail !== "string") throw HttpError.badRequest();
 
-    const topic: TopicDto = {
-      railId: parseInt(railId?.toString(), 10),
+    const topic: TopicDto = topicSchema.parse({
+      railId: parseInt(rail, 10),
       description: req.body.description,
       thumbnail: req.body.thumbnail,
       title: req.body.title,
-      userId: authorId,
-    };
+      userId: req.payload.id,
+    });
 
     const newTopic = await this.topicService.createTopic(topic);
 
@@ -41,15 +42,15 @@ export class TopicController {
 
     if (!id) throw HttpError.badRequest();
 
-    const userId = req.payload.id;
-
-    const updatedTopic = await this.topicService.updateTopic(id, {
+    const topic: TopicDto = topicSchema.parse({
       railId: req.body.railId,
       description: req.body.description,
-      title: req.body.title,
       thumbnail: req.body.thumbnail,
-      userId,
+      title: req.body.title,
+      userId: req.payload.id,
     });
+
+    const updatedTopic = await this.topicService.updateTopic(id, topic);
 
     res.send(updatedTopic);
   }

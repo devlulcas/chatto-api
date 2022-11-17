@@ -17,7 +17,7 @@ export class AuthController {
   constructor(private authService: AuthService) {}
 
   async signIn(req: Request, res: Response) {
-    const { email, password } = signInSchema.parse({ body: req.body });
+    const { email, password } = signInSchema.parse(req.body);
 
     const { token, payload } = await this.authService.signIn({
       email,
@@ -34,7 +34,7 @@ export class AuthController {
   }
 
   async signUp(req: Request, res: Response) {
-    const { name, email, password } = signUpSchema.parse({ body: req.body });
+    const { name, email, password } = signUpSchema.parse(req.body);
 
     const { token, payload } = await this.authService.signUp({
       name,

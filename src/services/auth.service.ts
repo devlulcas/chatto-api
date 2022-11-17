@@ -47,7 +47,7 @@ export class AuthService implements IAuthService {
   async signUp(data: SignUpDto): Promise<AuthResultDto> {
     const user = await this.userRepository.findByEmail(data.email);
 
-    if (!user) throw HttpError.notFound("Usuário inexistente");
+    if (user) throw HttpError.notFound("Usuário já existe");
 
     const hashedPassword = await this.crypto.hashPassword(data.password);
 

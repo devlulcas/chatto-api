@@ -10,7 +10,7 @@ export class RailController {
   async create(req: Request, res: Response) {
     const rail = railSchema.parse({
       ...req.body,
-      authorId: req.payload.id,
+      userId: req.payload.id,
     });
 
     const newRail = await this.railService.createRail({ ...rail }, rail.userId);
@@ -67,14 +67,14 @@ export class RailController {
 
     if (!id) throw HttpError.badRequest();
 
-    const userId = req.payload.id;
+    const rail = railSchema.parse({
+      ...req.body,
+      userId: req.payload.id,
+    });
 
     const updatedRail = await this.railService.updateRail({
       id,
-      description: req.body.description,
-      title: req.body.title,
-      thumbnail: req.body.thumbnail,
-      userId,
+      ...rail,
     });
 
     res.send(updatedRail);

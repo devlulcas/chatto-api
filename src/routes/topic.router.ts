@@ -2,11 +2,13 @@ import { Router } from "express";
 import { TopicController } from "../controllers/topic.controller";
 import { is } from "../middlewares/is";
 import { authMiddleware } from "../middlewares/jwt";
+import { RailRepository } from "../repositories/rail.repository";
 import { TopicRepository } from "../repositories/topic.repository";
 import { TopicService } from "../services/topic.service";
 
+const railRepository = new RailRepository();
 const topicRepository = new TopicRepository();
-const topicService = new TopicService(topicRepository);
+const topicService = new TopicService(topicRepository, railRepository);
 const topicController = new TopicController(topicService);
 
 const topicRouter = Router();

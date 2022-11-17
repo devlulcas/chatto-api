@@ -1,6 +1,7 @@
 import { Content, Topic } from "@prisma/client";
 import { TopicDto } from "../dtos/topic.dto";
 import { HttpError } from "../exceptions/http-error";
+import { IRailRepository } from "../repositories/rail.repository";
 import { ITopicRepository } from "../repositories/topic.repository";
 
 export interface ITopicService {
@@ -11,7 +12,10 @@ export interface ITopicService {
 }
 
 export class TopicService implements ITopicService {
-  constructor(private readonly topicRepository: ITopicRepository) {}
+  constructor(
+    private readonly topicRepository: ITopicRepository,
+    private readonly railRepository: IRailRepository
+  ) {}
 
   async getTopicById(topicId: number) {
     const result = await this.topicRepository.getOne(topicId);
@@ -22,6 +26,10 @@ export class TopicService implements ITopicService {
   }
 
   async createTopic(topic: TopicDto) {
+    const rail = await this.railRepository.findById(topic.railId);
+
+    if (!rail) throw new HttpError(404, "Rail not found");
+
     return this.topicRepository.save(topic);
   }
 

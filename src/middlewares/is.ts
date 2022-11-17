@@ -1,8 +1,9 @@
+import { Role } from "@prisma/client";
 import { NextFunction, Request, Response } from "express";
 import { HttpError } from "../exceptions/http-error";
 import { UserRepository } from "../repositories/user.repository";
 
-export function is(roles: string[]) {
+export function is(roles: Role[]) {
   return async (req: Request, res: Response, next: NextFunction) => {
     const user = req.payload.id;
 
@@ -16,7 +17,9 @@ export function is(roles: string[]) {
       throw new HttpError(401, "Permissão insuficiente");
     }
 
-    if (!roles.includes(userRole.toLowerCase().trim())) {
+    const isAllowed = roles.includes(userRole);
+
+    if (!isAllowed) {
       throw new HttpError(401, "Permissão insuficiente");
     }
 

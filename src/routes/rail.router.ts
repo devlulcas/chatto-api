@@ -44,14 +44,14 @@ railRouter.get("/:id", (req, res) => {
  * > Para criar uma trilha é necessário prover informações básicas da trilha.
  * > Com uma trilha criada é possível criar tópicos relacionados a ela.
  */
-railRouter.post("/", authMiddleware, is(["admin"]), (req, res) => {
+railRouter.post("/", authMiddleware, is(["ADMIN"]), (req, res) => {
   return railController.create(req, res);
 });
 
 /**
  * # Altera as informações básicas de uma trilha
  */
-railRouter.put("/:id", authMiddleware, is(["admin"]), (req, res) => {
+railRouter.put("/:id", authMiddleware, is(["ADMIN"]), (req, res) => {
   return railController.update(req, res);
 });
 
@@ -60,7 +60,7 @@ railRouter.put("/:id", authMiddleware, is(["admin"]), (req, res) => {
  *
  * > Não é uma boa ideia remover ~completamente as trilhas então apenas as ocultamos
  */
-railRouter.delete("/:id", authMiddleware, is(["admin"]), (req, res) => {
+railRouter.delete("/:id", authMiddleware, is(["ADMIN"]), (req, res) => {
   return railController.remove(req, res);
 });
 

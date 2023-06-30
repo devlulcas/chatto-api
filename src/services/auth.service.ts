@@ -21,14 +21,16 @@ export class AuthService implements IAuthService {
   async signIn(data: SignInDto): Promise<AuthResultDto> {
     const user = await this.userRepository.findByEmail(data.email);
 
-    if (!user) throw HttpError.notFound("Usuário inexistente");
+    if (!user) throw HttpError.notFound({ message: "Usuário inexistente" });
 
     const isPasswordCorrect = await this.crypto.checkPassword(
       data.password,
       user.password
     );
 
-    if (!isPasswordCorrect) throw HttpError.notFound("Usuário inexistente");
+    if (!isPasswordCorrect) {
+      throw HttpError.notFound({ message: "Usuário inexistente" });
+    }
 
     const payload: Payload = {
       id: user.id,
@@ -47,7 +49,7 @@ export class AuthService implements IAuthService {
   async signUp(data: SignUpDto): Promise<AuthResultDto> {
     const user = await this.userRepository.findByEmail(data.email);
 
-    if (user) throw HttpError.notFound("Usuário já existe");
+    if (user) throw HttpError.notFound({ message: "Usuário já existe" });
 
     const hashedPassword = await this.crypto.hashPassword(data.password);
 

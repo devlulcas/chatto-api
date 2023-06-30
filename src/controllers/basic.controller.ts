@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 
 class BasicController {
-  async getSample(req: Request, res: Response) {
+  async getSample(_: Request, res: Response) {
     res.send({
       hello: "mom",
     });

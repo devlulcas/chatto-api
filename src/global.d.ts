@@ -1,14 +1,11 @@
+import { Env } from "./configs/env";
 import { Payload } from "./types/payload";
 
 declare global {
   namespace NodeJS {
-    interface ProcessEnv {
-      NODE_ENV: "development" | "production";
-      ORIGINS: string;
-      URL: string;
-      PORT: `${number}`;
-    }
+    interface ProcessEnv extends Env {}
   }
+  
   namespace Express {
     interface Request {
       payload: Payload;

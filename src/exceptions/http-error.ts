@@ -1,77 +1,144 @@
-export class HttpError {
-  public message: unknown;
+type FieldError = Record<string, string[] | undefined> | null
+
+export type HttpErrorData = {
+  message?: string;
+  fieldErrors?: FieldError;
+};
+export class HttpError extends Error {
   public code: number;
+  public fieldErrors?: FieldError;
 
-  constructor(code: number, message: unknown) {
-    this.message = message;
+  constructor(code: number, message: string, fieldErrors?: FieldError) {
+    super(message as string);
     this.code = code;
+    this.fieldErrors = fieldErrors;
   }
 
-  static badRequest(message?: unknown) {
-    return new HttpError(400, message ?? "Requisição criada incorretamente");
+  static badRequest(data?: HttpErrorData) {
+    return new HttpError(
+      400,
+      data?.message ?? "Requisição criada incorretamente",
+      data?.fieldErrors
+    );
   }
 
-  static notAuthorized(message?: unknown) {
-    return new HttpError(401, message ?? "Nível de permissão insuficiente");
+  static notAuthorized(data?: HttpErrorData) {
+    return new HttpError(
+      401,
+      data?.message ?? "Nível de permissão insuficiente",
+      data?.fieldErrors
+    );
   }
 
-  static forbidden(message?: unknown) {
-    return new HttpError(403, message ?? "Você é um criminoso(a)");
+  static forbidden(data?: HttpErrorData) {
+    return new HttpError(
+      403,
+      data?.message ?? "Você é um criminoso(a)",
+      data?.fieldErrors
+    );
   }
 
-  static notFound(message?: unknown) {
-    return new HttpError(404, message ?? "Não encontrado");
+  static notFound(data?: HttpErrorData) {
+    return new HttpError(
+      404,
+      data?.message ?? "Não encontrado",
+      data?.fieldErrors
+    );
   }
 
-  static notAcceptable(message?: unknown) {
-    return new HttpError(406, message ?? "Inaceitável");
+  static notAcceptable(data?: HttpErrorData) {
+    return new HttpError(406, data?.message ?? "Inaceitável", data?.fieldErrors);
   }
 
-  static requestTimeout(message?: unknown) {
-    return new HttpError(408, message ?? "2000 anos depois...");
+  static requestTimeout(data?: HttpErrorData) {
+    return new HttpError(
+      408,
+      data?.message ?? "2000 anos depois...",
+      data?.fieldErrors
+    );
   }
 
-  static conflict(message?: unknown) {
-    return new HttpError(409, message ?? "Conflito");
+  static conflict(data?: HttpErrorData) {
+    return new HttpError(409, data?.message ?? "Conflito", data?.fieldErrors);
   }
 
-  static gone(message?: unknown) {
-    return new HttpError(410, message ?? "Gone! Reduced to atoms");
+  static gone(data?: HttpErrorData) {
+    return new HttpError(
+      410,
+      data?.message ?? "Gone! Reduced to atoms",
+      data?.fieldErrors
+    );
   }
 
-  static lengthRequired(message?: unknown) {
-    return new HttpError(411, message ?? "Tamanho requerido");
+  static lengthRequired(data?: HttpErrorData) {
+    return new HttpError(
+      411,
+      data?.message ?? "Tamanho requerido",
+      data?.fieldErrors
+    );
   }
 
-  static preconditionFailed(message?: unknown) {
-    return new HttpError(412, message ?? "Prerrequisito falhou");
+  static preconditionFailed(data?: HttpErrorData) {
+    return new HttpError(
+      412,
+      data?.message ?? "Prerrequisito falhou",
+      data?.fieldErrors
+    );
   }
 
-  static payloadTooLarge(message?: unknown) {
-    return new HttpError(413, message ?? "Prerrequisito falhou");
+  static payloadTooLarge(data?: HttpErrorData) {
+    return new HttpError(
+      413,
+      data?.message ?? "Prerrequisito falhou",
+      data?.fieldErrors
+    );
   }
 
-  static unsupportedMediaType(message?: unknown) {
-    return new HttpError(415, message ?? "Fotos.exe não vai rolar");
+  static unsupportedMediaType(data?: HttpErrorData) {
+    return new HttpError(
+      415,
+      data?.message ?? "Fotos.exe não vai rolar",
+      data?.fieldErrors
+    );
   }
 
-  static expectationFailed(message?: unknown) {
-    return new HttpError(417, message ?? "Expectativa falha");
+  static expectationFailed(data?: HttpErrorData) {
+    return new HttpError(
+      417,
+      data?.message ?? "Expectativa falha",
+      data?.fieldErrors
+    );
   }
 
-  static teapot(message?: unknown) {
-    return new HttpError(418, message ?? "FIIIIIIIIIIIIIIIIIIII");
+  static teapot(data?: HttpErrorData) {
+    return new HttpError(
+      418,
+      data?.message ?? "FIIIIIIIIIIIIIIIIIIII",
+      data?.fieldErrors
+    );
   }
 
-  static enhanceYourCalm(message?: unknown) {
-    return new HttpError(420, message ?? "Se acalma irmã(o)");
+  static enhanceYourCalm(data?: HttpErrorData) {
+    return new HttpError(
+      420,
+      data?.message ?? "Se acalma irmã(o)",
+      data?.fieldErrors
+    );
   }
 
-  static tokenExpired(message?: unknown) {
-    return new HttpError(498, message ?? "Token inválido ou expirado");
+  static tokenExpired(data?: HttpErrorData) {
+    return new HttpError(
+      498,
+      data?.message ?? "Token inválido ou expirado",
+      data?.fieldErrors
+    );
   }
 
-  static notImplemented(message?: unknown) {
-    return new HttpError(498, message ?? "Não implementado");
+  static notImplemented(data?: HttpErrorData) {
+    return new HttpError(
+      498,
+      data?.message ?? "Não implementado",
+      data?.fieldErrors
+    );
   }
 }

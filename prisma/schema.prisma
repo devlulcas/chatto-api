@@ -13,53 +13,9 @@ enum Role {
 }
 
 model User {
-  id       Int       @id @default(autoincrement())
+  id       Int    @id @default(autoincrement())
   name     String
-  email    String    @unique
+  email    String @unique
   password String
-  role     Role      @default(USER)
-  rail     Rail[]
-  Topic    Topic[]
-  Content  Content[]
-}
-
-model Rail {
-  id          Int     @id @default(autoincrement())
-  title       String
-  description String
-  thumbnail   String
-  author      User    @relation(fields: [userId], references: [id])
-  userId      Int
-  topic       Topic[]
-}
-
-model Topic {
-  id          Int       @id @default(autoincrement())
-  title       String
-  description String
-  thumbnail   String
-  rail        Rail      @relation(fields: [railId], references: [id])
-  railId      Int
-  author      User      @relation(fields: [userId], references: [id])
-  userId      Int
-  contents    Content[]
-}
-
-enum ContentFormat {
-  URL
-  VIDEO
-  TEXT
-}
-
-model Content {
-  id          Int           @id @default(autoincrement())
-  title       String
-  description String
-  thumbnail   String
-  format      ContentFormat
-  post        Bytes?
-  topic       Topic?        @relation(fields: [topicId], references: [id])
-  topicId     Int?
-  author      User          @relation(fields: [userId], references: [id])
-  userId      Int
+  role     Role   @default(USER)
 }

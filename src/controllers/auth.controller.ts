@@ -1,4 +1,5 @@
 import { CookieOptions, Request, Response } from "express";
+import { HttpError } from "../exceptions/http-error";
 import { AuthService } from "../services/auth.service";
 import { signInSchema, signUpSchema } from "../validators";
 
@@ -6,7 +7,7 @@ export class AuthController {
   private cookieOptions: CookieOptions = {
     domain: "/",
     httpOnly: true,
-    secure: true,
+    secure: process.env.NODE_ENV === "production",
     maxAge: 60 * 1000,
   };
 
@@ -17,11 +18,18 @@ export class AuthController {
   constructor(private authService: AuthService) {}
 
   async signIn(req: Request, res: Response) {
-    const { email, password } = signInSchema.parse(req.body);
+    const signInBodyResult = signInSchema.safeParse(req.body);
+
+    if (!signInBodyResult.success) {
+      throw HttpError.badRequest({
+        message: "Corpo da requisição inválido",
+        fieldErrors: signInBodyResult.error.flatten().fieldErrors,
+      });
+    }
 
     const { token, payload } = await this.authService.signIn({
-      email,
-      password,
+      email: signInBodyResult.data.email,
+      password: signInBodyResult.data.password,
     });
 
     res.cookie("token", token, this.cookieOptions);
@@ -34,12 +42,19 @@ export class AuthController {
   }
 
   async signUp(req: Request, res: Response) {
-    const { name, email, password } = signUpSchema.parse(req.body);
+    const signUpBodyResult = signUpSchema.safeParse(req.body);
+
+    if (!signUpBodyResult.success) {
+      throw HttpError.badRequest({
+        message: "Corpo da requisição inválido",
+        fieldErrors: signUpBodyResult.error.flatten().fieldErrors,
+      });
+    }
 
     const { token, payload } = await this.authService.signUp({
-      name,
-      email,
-      password,
+      name: signUpBodyResult.data.name,
+      email: signUpBodyResult.data.email,
+      password: signUpBodyResult.data.password,
     });
 
     res.cookie("token", token, this.cookieOptions);
@@ -51,7 +66,7 @@ export class AuthController {
     });
   }
 
-  async signOut(req: Request, res: Response) {
+  async signOut(_: Request, res: Response) {
     res.cookie("token", "", {
       ...this.cookieOptions,
       maxAge: 1,

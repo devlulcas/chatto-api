@@ -1,4 +1,4 @@
-export interface Pagination {
+export type Pagination = {
   page: number;
   limit: number;
 }

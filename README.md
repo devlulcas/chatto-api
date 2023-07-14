@@ -1,4 +1,4 @@
-> **Warning**: Arquitetura guiada pelas vozes da minha cabeça!
+> **Warning**: Esse projeto não tem um objetivo claro, é apenas um playground para testar algumas coisas. Não é recomendado para uso em produção.
 
 - Clone o projeto
 

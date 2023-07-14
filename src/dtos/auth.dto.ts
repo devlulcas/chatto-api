@@ -1,16 +1,16 @@
-import { Payload } from "../types/payload";
+import { JWTPayload } from "../types/payload";
 
-export interface AuthResultDto {
+export type AuthResultDto = {
   token: string;
-  payload: Payload;
+  payload: JWTPayload;
 }
 
-export interface SignInDto {
+export type SignInDto = {
   password: string;
   email: string;
 }
 
-export interface SignUpDto {
+export type SignUpDto = {
   name: string;
   password: string;
   email: string;

@@ -3,7 +3,7 @@ import { prisma } from "../configs";
 import { NewUserDto } from "../dtos/user.dto";
 import { HttpError } from "../exceptions/http-error";
 
-export interface IUserRepository {
+export type IUserRepository = {
   findByEmail(email: string): Promise<User | null>;
   save(data: NewUserDto): Promise<User>;
   findById(id: User["id"]): Promise<User | null>;

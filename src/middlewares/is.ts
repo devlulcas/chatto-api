@@ -5,7 +5,9 @@ import { UserRepository } from "../repositories/user.repository";
 
 export function is(roles: Role[]) {
   return async (req: Request, res: Response, next: NextFunction) => {
-    const user = req.payload.id;
+    if (!req.payload) throw new HttpError(401, "Permissão ausente");
+
+    const user = req.payload.sub;
 
     if (!user) throw new HttpError(401, "Permissão ausente");
 

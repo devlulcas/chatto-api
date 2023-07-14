@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { HttpError } from "../exceptions/http-error";
-import { JWT } from "../lib/token.lib";
+import { JWT } from "../lib/jwt";
 
 export async function authMiddleware(
   req: Request,

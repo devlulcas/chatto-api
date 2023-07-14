@@ -1,11 +1,11 @@
 import { AuthResultDto, SignInDto, SignUpDto } from "../dtos/auth.dto";
 import { HttpError } from "../exceptions/http-error";
 import { ICrypto } from "../lib/crypto.lib";
-import { ITokenGenerator } from "../lib/token.lib";
+import { ITokenGenerator } from "../lib/jwt";
 import { IUserRepository } from "../repositories/user.repository";
-import { Payload } from "../types/payload";
+import { JWTPayload } from "../types/payload";
 
-export interface IAuthService {
+export type IAuthService = {
   signIn(data: SignInDto): Promise<AuthResultDto>;
   signUp(data: SignUpDto): Promise<AuthResultDto>;
   signOut(): Promise<void>;
@@ -32,13 +32,13 @@ export class AuthService implements IAuthService {
       throw HttpError.notFound({ message: "Usuário inexistente" });
     }
 
-    const payload: Payload = {
-      id: user.id,
+    const payload: JWTPayload = {
+      sub: user.id,
       name: user.name,
       role: user.role,
     };
 
-    const token = this.tokenGenerator.createToken(payload);
+    const token = await this.tokenGenerator.createToken(payload);
 
     return {
       token,
@@ -59,13 +59,13 @@ export class AuthService implements IAuthService {
       password: hashedPassword,
     });
 
-    const payload: Payload = {
-      id: newUser.id,
+    const payload: JWTPayload = {
+      sub: newUser.id,
       name: newUser.name,
       role: newUser.role,
     };
 
-    const token = this.tokenGenerator.createToken(payload);
+    const token = await this.tokenGenerator.createToken(payload);
 
     return {
       token,

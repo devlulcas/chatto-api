@@ -1,6 +1,6 @@
 import bcrypt from "bcryptjs";
 
-export interface ICrypto {
+export type ICrypto = {
   hashPassword(password: string): Promise<string>;
   checkPassword(password: string, hashedPassword: string): Promise<boolean>;
 }

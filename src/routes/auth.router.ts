@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { AuthController } from "../controllers/auth.controller";
 import { Crypto } from "../lib/crypto.lib";
-import { JWT } from "../lib/token.lib";
+import { JWT } from "../lib/jwt";
 import { UserRepository } from "../repositories/user.repository";
 import { AuthService } from "../services/auth.service";
 

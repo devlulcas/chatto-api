@@ -1,5 +1,5 @@
 import { Env } from "./configs/env";
-import { Payload } from "./types/payload";
+import { JWTPayload } from "./types/payload";
 
 declare global {
   namespace NodeJS {
@@ -8,7 +8,7 @@ declare global {
   
   namespace Express {
     interface Request {
-      payload: Payload;
+      payload: JWTPayload | null;
     }
   }
 }

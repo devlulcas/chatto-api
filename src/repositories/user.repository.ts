@@ -1,14 +1,14 @@
-import { Role, User } from "@prisma/client";
-import { prisma } from "../configs";
-import { NewUserDto } from "../dtos/user.dto";
-import { HttpError } from "../exceptions/http-error";
+import { Role, User } from '@prisma/client';
+import { prisma } from '../configs';
+import { NewUserDto } from '../dtos/user.dto';
+import { HttpError } from '../exceptions/http-error';
 
 export type IUserRepository = {
   findByEmail(email: string): Promise<User | null>;
   save(data: NewUserDto): Promise<User>;
-  findById(id: User["id"]): Promise<User | null>;
+  findById(id: User['id']): Promise<User | null>;
   getRole(id: number): Promise<Role>;
-}
+};
 
 export class UserRepository implements IUserRepository {
   async findByEmail(email: string) {
@@ -19,7 +19,7 @@ export class UserRepository implements IUserRepository {
     return prisma.user.create({ data: data });
   }
 
-  async findById(id: User["id"]) {
+  async findById(id: User['id']) {
     return prisma.user.findFirst({ where: { id } });
   }
 

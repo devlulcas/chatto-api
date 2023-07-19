@@ -1,9 +1,9 @@
-import bcrypt from "bcryptjs";
+import bcrypt from 'bcryptjs';
 
 export type ICrypto = {
   hashPassword(password: string): Promise<string>;
   checkPassword(password: string, hashedPassword: string): Promise<boolean>;
-}
+};
 
 export class Crypto implements ICrypto {
   public async hashPassword(password: string) {

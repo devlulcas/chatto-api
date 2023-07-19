@@ -1,18 +1,19 @@
-import "dotenv/config";
-import "express-async-errors";
+import 'dotenv/config';
+import 'express-async-errors';
 
-import cookieParser from "cookie-parser";
-import cors from "cors";
-import express, { Router } from "express";
-import http, { Server as HttpServer } from "node:http";
-import { prisma } from "./configs";
-import { Env } from "./configs/env";
-import { errorHandler } from "./middlewares/error-handler";
+import cookieParser from 'cookie-parser';
+import cors from 'cors';
+import express, { Router } from 'express';
+import http, { Server as HttpServer } from 'node:http';
+import { prisma } from './configs';
+import { Env } from './configs/env';
+import { errorHandler } from './middlewares/error-handler';
 
 type ExpressApp = ReturnType<typeof express>;
 
 type AppOptions = {
   env: Env;
+  prefix?: string;
   routers?: Record<string, Router>;
 };
 
@@ -21,9 +22,12 @@ export class App {
   private server: HttpServer;
   private app: ExpressApp;
   private routers: Record<string, Router> = {};
+  private prefix: string;
 
   constructor(options: AppOptions) {
     this.env = options.env;
+
+    this.prefix = options.prefix ?? '';
 
     this.app = express();
 
@@ -41,9 +45,9 @@ export class App {
     this.app.use(
       cors({
         origin: this.env.ORIGINS,
-        methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+        methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
         credentials: true,
-      })
+      }),
     );
 
     this.app.use(express.json());
@@ -53,7 +57,7 @@ export class App {
 
   private initRoutes() {
     for (const [path, router] of Object.entries(this.routers)) {
-      this.app.use(path, router);
+      this.app.use(this.prefix + path, router);
     }
   }
 
@@ -65,7 +69,7 @@ export class App {
     await prisma.$disconnect();
 
     this.server.close(() => {
-      console.log("Server closed");
+      console.log('Server closed');
       process.exit(0);
     });
   }
@@ -77,8 +81,8 @@ export class App {
       console.log(`Server listening on port ${this.env.PORT}`);
     });
 
-    process.on("SIGTERM", this.gracefulShutdown);
-    process.on("SIGINT", this.gracefulShutdown);
+    process.on('SIGTERM', this.gracefulShutdown);
+    process.on('SIGINT', this.gracefulShutdown);
   }
 
   public registerRouter(path: string, router: Router) {

@@ -1,9 +1,9 @@
-import { Router } from "express";
-import { AuthController } from "../controllers/auth.controller";
-import { Crypto } from "../lib/crypto.lib";
-import { JWT } from "../lib/jwt";
-import { UserRepository } from "../repositories/user.repository";
-import { AuthService } from "../services/auth.service";
+import { Router } from 'express';
+import { AuthController } from '../controllers/auth.controller';
+import { Crypto } from '../lib/crypto.lib';
+import { JWT } from '../lib/jwt';
+import { UserRepository } from '../repositories/user.repository';
+import { AuthService } from '../services/auth.service';
 
 const authRouter = Router();
 
@@ -14,17 +14,17 @@ const authService = new AuthService(userRepository, crypto, tokenGenerator);
 const authController = new AuthController(authService);
 
 // Sign In
-authRouter.post("/sign-in", (req, res) => {
+authRouter.post('/sign-in', (req, res) => {
   return authController.signIn(req, res);
 });
 
 // Sign Out
-authRouter.post("/sign-up", (req, res) => {
+authRouter.post('/sign-up', (req, res) => {
   return authController.signUp(req, res);
 });
 
 // Sign Up
-authRouter.post("/sign-out", (req, res) => {
+authRouter.post('/sign-out', (req, res) => {
   return authController.signOut(req, res);
 });
 

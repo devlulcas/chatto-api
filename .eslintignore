@@ -1,6 +1,0 @@
-node_modules
-yarn.lock
-*-lock.json
-coverage
-public
-dist

@@ -1,35 +1,32 @@
-import { AuthResultDto, SignInDto, SignUpDto } from "../dtos/auth.dto";
-import { HttpError } from "../exceptions/http-error";
-import { ICrypto } from "../lib/crypto.lib";
-import { ITokenGenerator } from "../lib/jwt";
-import { IUserRepository } from "../repositories/user.repository";
-import { JWTPayload } from "../types/payload";
+import { AuthResultDto, SignInDto, SignUpDto } from '@/dtos/auth.dto';
+import { HttpError } from '../exceptions/http-error';
+import { ICrypto } from '../lib/crypto.lib';
+import { ITokenGenerator } from '../lib/jwt';
+import { IUserRepository } from '../repositories/user.repository';
+import { JWTPayload } from '../types/payload';
 
 export type IAuthService = {
   signIn(data: SignInDto): Promise<AuthResultDto>;
   signUp(data: SignUpDto): Promise<AuthResultDto>;
   signOut(): Promise<void>;
-}
+};
 
 export class AuthService implements IAuthService {
   constructor(
     private userRepository: IUserRepository,
     private crypto: ICrypto,
-    private tokenGenerator: ITokenGenerator
+    private tokenGenerator: ITokenGenerator,
   ) {}
 
   async signIn(data: SignInDto): Promise<AuthResultDto> {
     const user = await this.userRepository.findByEmail(data.email);
 
-    if (!user) throw HttpError.notFound({ message: "Usuário inexistente" });
+    if (!user) throw HttpError.notFound({ message: 'Usuário inexistente' });
 
-    const isPasswordCorrect = await this.crypto.checkPassword(
-      data.password,
-      user.password
-    );
+    const isPasswordCorrect = await this.crypto.checkPassword(data.password, user.password);
 
     if (!isPasswordCorrect) {
-      throw HttpError.notFound({ message: "Usuário inexistente" });
+      throw HttpError.notFound({ message: 'Usuário inexistente' });
     }
 
     const payload: JWTPayload = {
@@ -49,7 +46,7 @@ export class AuthService implements IAuthService {
   async signUp(data: SignUpDto): Promise<AuthResultDto> {
     const user = await this.userRepository.findByEmail(data.email);
 
-    if (user) throw HttpError.notFound({ message: "Usuário já existe" });
+    if (user) throw HttpError.notFound({ message: 'Usuário já existe' });
 
     const hashedPassword = await this.crypto.hashPassword(data.password);
 

@@ -1,13 +1,13 @@
-import { CookieOptions, Request, Response } from "express";
-import { HttpError } from "../exceptions/http-error";
-import { AuthService } from "../services/auth.service";
-import { signInSchema, signUpSchema } from "../validators";
+import { CookieOptions, Request, Response } from 'express';
+import { HttpError } from '../exceptions/http-error';
+import { AuthService } from '../services/auth.service';
+import { signInSchema, signUpSchema } from '../validators';
 
 export class AuthController {
   private cookieOptions: CookieOptions = {
-    domain: "/",
+    domain: '/',
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
+    secure: process.env.NODE_ENV === 'production',
     maxAge: 60 * 1000,
   };
 
@@ -22,7 +22,7 @@ export class AuthController {
 
     if (!signInBodyResult.success) {
       throw HttpError.badRequest({
-        message: "Corpo da requisição inválido",
+        message: 'Corpo da requisição inválido',
         fieldErrors: signInBodyResult.error.flatten().fieldErrors,
       });
     }
@@ -32,9 +32,9 @@ export class AuthController {
       password: signInBodyResult.data.password,
     });
 
-    res.cookie("token", token, this.cookieOptions);
+    res.cookie('token', token, this.cookieOptions);
 
-    res.cookie("payload", payload, this.payloadCookieOptions);
+    res.cookie('payload', payload, this.payloadCookieOptions);
 
     res.send({
       payload,
@@ -46,7 +46,7 @@ export class AuthController {
 
     if (!signUpBodyResult.success) {
       throw HttpError.badRequest({
-        message: "Corpo da requisição inválido",
+        message: 'Corpo da requisição inválido',
         fieldErrors: signUpBodyResult.error.flatten().fieldErrors,
       });
     }
@@ -57,9 +57,9 @@ export class AuthController {
       password: signUpBodyResult.data.password,
     });
 
-    res.cookie("token", token, this.cookieOptions);
+    res.cookie('token', token, this.cookieOptions);
 
-    res.cookie("payload", payload, this.payloadCookieOptions);
+    res.cookie('payload', payload, this.payloadCookieOptions);
 
     res.status(201).send({
       payload,
@@ -67,7 +67,7 @@ export class AuthController {
   }
 
   async signOut(_: Request, res: Response) {
-    res.cookie("token", "", {
+    res.cookie('token', '', {
       ...this.cookieOptions,
       maxAge: 1,
     });

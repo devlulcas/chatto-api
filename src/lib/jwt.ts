@@ -1,12 +1,12 @@
-import { SignOptions, VerifyOptions, sign, verify } from "jsonwebtoken";
-import { existsSync, readFileSync } from "node:fs";
-import { join } from "node:path";
-import { JWTPayload } from "../types/payload";
+import { SignOptions, VerifyOptions, sign, verify } from 'jsonwebtoken';
+import { existsSync, readFileSync } from 'node:fs';
+import { join } from 'node:path';
+import { JWTPayload } from '../types/payload';
 
 export type ITokenGenerator = {
   createToken(payload: JWTPayload): Promise<string>;
   validateToken(token: string): Promise<JWTPayload>;
-}
+};
 
 export class JWT implements ITokenGenerator {
   private privateKeyPath: string;
@@ -16,9 +16,8 @@ export class JWT implements ITokenGenerator {
   private expiresIn: string;
 
   constructor() {
-    this.privateKeyPath = join(__dirname, "jwt.key");
-    this.publicKeyPath = join(__dirname, "jwt.key.pub");
-    
+    this.privateKeyPath = join(__dirname, 'jwt.key');
+    this.publicKeyPath = join(__dirname, 'jwt.key.pub');
 
     console.table({
       privateKeyPath: this.privateKeyPath,
@@ -26,16 +25,16 @@ export class JWT implements ITokenGenerator {
     });
 
     if (existsSync(this.privateKeyPath) === false) {
-      throw new Error("Private key not found");
+      throw new Error('Private key not found');
     }
 
     if (existsSync(this.publicKeyPath) === false) {
-      throw new Error("Public key not found");
+      throw new Error('Public key not found');
     }
-    
+
     this.privateKey = readFileSync(this.privateKeyPath);
     this.publicKey = readFileSync(this.publicKeyPath);
-    this.expiresIn = process.env.JWT_EXPIRATION || "1h";
+    this.expiresIn = process.env.JWT_EXPIRATION || '1h';
   }
 
   /**
@@ -46,7 +45,7 @@ export class JWT implements ITokenGenerator {
    */
   createToken(payload: JWTPayload) {
     const signOptions: SignOptions = {
-      algorithm: "RS256",
+      algorithm: 'RS256',
       expiresIn: this.expiresIn,
     };
 
@@ -66,7 +65,7 @@ export class JWT implements ITokenGenerator {
    */
   validateToken(token: string) {
     const verifyOptions: VerifyOptions = {
-      algorithms: ["RS256"],
+      algorithms: ['RS256'],
     };
 
     return new Promise<JWTPayload>((resolve, reject) => {
@@ -74,7 +73,7 @@ export class JWT implements ITokenGenerator {
         if (error) return reject(error);
 
         if (!this.isJWTPayload(decoded)) {
-          return reject(new Error("Invalid JWT Payload"));
+          return reject(new Error('Invalid JWT Payload'));
         }
 
         const data: JWTPayload = {
@@ -89,6 +88,6 @@ export class JWT implements ITokenGenerator {
   }
 
   private isJWTPayload(decoded: any): decoded is JWTPayload {
-    return typeof decoded === "object" && typeof decoded.sub !== "undefined";
+    return typeof decoded === 'object' && typeof decoded.sub !== 'undefined';
   }
 }

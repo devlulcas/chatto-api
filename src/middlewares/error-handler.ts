@@ -1,20 +1,15 @@
-import { NextFunction, Request, Response } from "express";
-import { ZodError } from "zod";
-import { HttpError, HttpErrorData } from "../exceptions/http-error";
+import { NextFunction, Request, Response } from 'express';
+import { ZodError } from 'zod';
+import { HttpError, HttpErrorData } from '../exceptions/http-error';
 
 type ErrorResponse = {
   error: HttpErrorData;
 };
 
-export function errorHandler(
-  error: unknown,
-  req: Request,
-  res: Response,
-  next: NextFunction
-) {
+export function errorHandler(error: unknown, req: Request, res: Response, next: NextFunction) {
   let content: ErrorResponse = {
     error: {
-      message: "Internal Server Error",
+      message: 'Internal Server Error',
       fieldErrors: null,
     },
   };
@@ -31,7 +26,7 @@ export function errorHandler(
   if (error instanceof ZodError) {
     content = {
       error: {
-        message: "Requisição criada incorretamente",
+        message: 'Requisição criada incorretamente',
         fieldErrors: error.flatten().fieldErrors,
       },
     };

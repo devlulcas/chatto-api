@@ -1,16 +1,12 @@
-import { NextFunction, Request, Response } from "express";
-import { HttpError } from "../exceptions/http-error";
-import { JWT } from "../lib/jwt";
+import { NextFunction, Request, Response } from 'express';
+import { HttpError } from '../exceptions/http-error';
+import { JWT } from '../lib/jwt';
 
-export async function authMiddleware(
-  req: Request,
-  res: Response,
-  next: NextFunction
-) {
+export async function authMiddleware(req: Request, res: Response, next: NextFunction) {
   try {
     const token = req.cookies.token;
 
-    if (!token) throw new HttpError(401, "Token ausente");
+    if (!token) throw new HttpError(401, 'Token ausente');
 
     const jwt = new JWT();
 
@@ -22,10 +18,10 @@ export async function authMiddleware(
   } catch (unknownError) {
     const error = unknownError as Error;
 
-    if (error.name === "TokenExpiredError") {
-      throw new HttpError(401, "Token expirado");
+    if (error.name === 'TokenExpiredError') {
+      throw new HttpError(401, 'Token expirado');
     }
 
-    throw new HttpError(401, "Token inválido");
+    throw new HttpError(401, 'Token inválido');
   }
 }
